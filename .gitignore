@@ -1,0 +1,21 @@
+# Firmware blobs, dumps and personal data are intentionally excluded.
+# Only documentation, conclusions, small text artifacts and tools live here.
+fw-*/
+analysis/*.pdf
+analysis/*.txt
+analysis/dfe-a*.bin
+analysis/*.rea.json
+*.exe
+*.dmg
+*.dat
+*.fdat
+*.bin
+*.img
+*.so
+*.elf
+*.tar
+
+# Build / editor noise
+.DS_Store
+__pycache__/
+*.pyc

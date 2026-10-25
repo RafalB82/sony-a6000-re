@@ -1,0 +1,138 @@
+# Machine-readable source list.
+# grade: A = primary/verified, B = careful secondary, C = community, D = single unverified source
+
+sources:
+  - id: sony-fw-a6000
+    grade: A
+    kind: firmware
+    name: "Sony ILCE-6000 firmware 3.21 (Update_ILCE6000V321)"
+    how_to_get: "Sony support site, ILCE-6000 downloads"
+    sha256:
+      dmg: "844349ff7edddc294c0fddd90a454848eeda8987b6bf043c9757982b3a42ba3e"
+      dat: "29aef21ab9b5c2e98388974ac9749c2cbfb1815273b444e62f2e41398aa8892f"
+    used_for: ["partition table", "settings defaults", "dfe.bin", "sabin", "scenario"]
+
+  - id: sony-fw-a6300
+    grade: A
+    kind: firmware
+    name: "Sony ILCE-6300 firmware 2.01 (Update_ILCE6300V201)"
+    sha256:
+      exe: "8c850f7d5cf6b6717f2e99ca6c7ff38ecbc59745ec0ebdea1833b63f9b76d1d1"
+    used_for: ["sibling comparison", "beaune codec evidence", "dfe generation diff"]
+
+  - id: sony-sm-a6000
+    grade: A
+    kind: service-manual
+    name: "SERVICE MANUAL LEVEL 3, ILCE-6000/6000L/6000Y"
+    note: "5 sheets; identifies IC6200 = CXD90027GF, IC5700 = MB9AF004BGL"
+    how_to_get: "iFixit document archive / photo-parts.com.ua"
+    redistributed: false
+
+  - id: sony-sm-a6300
+    grade: A
+    kind: service-manual
+    name: "SERVICE MANUAL LEVEL 3, ILCE-6300/6300L/6300M"
+    note: "65 pages; adds IC9012 = CXD4236-1GG (Beaune codec)"
+    redistributed: false
+
+  - id: ma1co-fwtool
+    grade: A
+    kind: code
+    name: "ma1co/fwtool.py"
+    url: "https://github.com/ma1co/fwtool.py"
+    used_for: ["unpack/pack", "crypter CXD90014", "devices.yml"]
+
+  - id: ma1co-pmca-re
+    grade: A
+    kind: code
+    name: "ma1co/Sony-PMCA-RE"
+    url: "https://github.com/ma1co/Sony-PMCA-RE"
+    used_for: ["Backup.bin parser", "updatershell", "usbshell"]
+
+  - id: ma1co-platform
+    grade: A
+    kind: code
+    name: "ma1co/OpenMemories-Platform"
+    url: "https://github.com/ma1co/OpenMemories-Platform"
+    used_for: ["property IDs", "tweak values", "protection logic"]
+
+  - id: ma1co-docs
+    grade: A
+    kind: docs
+    name: "ma1co/OpenMemories-Docs (hardware.rst)"
+    url: "https://github.com/ma1co/OpenMemories-Docs"
+    used_for: ["SoC/DFE/codec families", "muITRON note"]
+
+  - id: ma1co-sa-dsp
+    grade: A
+    kind: tool
+    name: "ma1co/SA-DSP (Ghidra processor spec for sabin)"
+    url: "https://github.com/ma1co/SA-DSP"
+
+  - id: ma1co-qemu
+    grade: A
+    kind: tool
+    name: "ma1co/qemu + ma1co/OpenMemories-CI"
+    url: "https://github.com/ma1co/qemu"
+
+  - id: nexhack-wiki
+    grade: B
+    kind: documentation
+    name: "nex-hack wiki: fwtool, fwencryption, nex6-av-cam.bin-reversing"
+    url: "https://www.personal-view.com/faqs/sony-hack/fwtool"
+    note: "read via web.archive.org; site itself is not always reachable"
+
+  - id: nexhack-code
+    grade: A
+    kind: code
+    name: "erik-smit/nex-hack (C fwtool), steelcnn/nex-hack (IDA IDC)"
+    url: "https://github.com/erik-smit/nex-hack"
+
+  - id: sigrok-emount
+    grade: B
+    kind: measurement
+    name: "Entropy512/sigrok-dumps — lens_mounts/sony_emount"
+    url: "https://github.com/Entropy512/sigrok-dumps/tree/master/lens_mounts/sony_emount"
+    note: "logic-analyser captures taken on an ILCE-A6000"
+
+  - id: recipe-lab
+    grade: B
+    kind: project
+    name: "voxivoid/recipe-lab-sony-pmca"
+    url: "https://github.com/voxivoid/recipe-lab-sony-pmca"
+    used_for: ["verified A6000 setting ID map", "libObj.so method"]
+
+  - id: wikipedia-bionz
+    grade: B
+    kind: encyclopedia
+    name: "Wikipedia: Bionz"
+    url: "https://en.wikipedia.org/wiki/Bionz"
+    note: "chip pairings per model; article is flagged for missing sources"
+
+  - id: ifixit-a7rii
+    grade: B
+    kind: teardown
+    name: "iFixit Sony a7R II Teardown"
+    url: "https://www.ifixit.com/Teardown/Sony+a7R+II+Teardown/45597"
+    used_for: ["CXD4236-1GG identification"]
+
+  - id: hackaday-a5000
+    grade: C
+    kind: article
+    name: "Hackaday: Telnet Gets Stubborn Sony Camera Under Control (2022-11-25)"
+    url: "https://hackaday.com/2022/11/25/telnet-gets-stubborn-sony-camera-under-control/"
+    note: "clean HDMI via bk.elf w 0x01070a47 00; verified locally against A6000 defaults"
+
+  - id: cliffvale
+    grade: D
+    kind: project
+    name: "CliffVale/sony-a6000-firmware-research"
+    url: "https://github.com/CliffVale/sony-a6000-firmware-research"
+    note: "correct dump methodology and partition start offsets; verification tables and region map are unreliable"
+
+  - id: docodethat
+    grade: D
+    kind: blog
+    name: "docodethatmatters.com: hacking the Sony A6000 (parts 1-3) + research index"
+    url: "https://docodethatmatters.com/hacking-sony-a6000-for-modernization/"
+    note: "useful for Sony Camera API tricks (setPostviewImageSize); the 'research' post is auto-assembled"
