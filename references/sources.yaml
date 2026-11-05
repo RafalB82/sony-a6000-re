@@ -24,7 +24,9 @@ sources:
     grade: A
     kind: service-manual
     name: "SERVICE MANUAL LEVEL 3, ILCE-6000/6000L/6000Y"
-    note: "5 sheets; identifies IC6200 = CXD90027GF, IC5700 = MB9AF004BGL"
+    note: "54 pages; sheet map and pin tables in docs/16. Identifies IC6200 = CXD90027GF,
+      IC5700 = MB9AF004BGL (full code MB9AF004BGL-G-103-ERE1), the CN4906 service
+      footprint (BIONZ + Darwin combined) and the shutter wiring (CN-1027 → CN302)"
     how_to_get: "iFixit document archive / photo-parts.com.ua"
     redistributed: false
 

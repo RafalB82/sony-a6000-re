@@ -36,6 +36,7 @@ A structured knowledge base about the ILCE-6000 platform:
 | 13 | [Darwin shutter patch](docs/en/13-darwin-shutter-patch.md) | Two bytes in the power/shutter MCU: what they disable, what stays alive |
 | 14 | [EFCS/Electronic selector](docs/en/14-efcs-selector.md) | The added shutter-mode function, its caves, and why the signal never reaches Darwin |
 | 15 | [Exposure and uniformity](docs/en/15-exposure-and-uniformity.md) | What the silent shutter really gives: 7 ms, 15.2 µs/row, 61 ms readout, and the RAM fix |
+| 16 | [Service manual](docs/en/16-service-manual.md) | Sheet map, debug balls and connectors, and how the shutter is actually wired |
 | — | [Sources](docs/en/99-sources.md) | References with a credibility grade per source |
 
 Polish originals (working notes, longer and messier) live in
@@ -60,7 +61,7 @@ Polish originals (working notes, longer and messier) live in
 ## Repository contents
 
 ```
-docs/en/            English documents (01–15, 99)
+docs/en/            English documents (01–16, 99)
 docs/pl/            Polish translations of the same set
 docs/pl/raw/        original Polish working notes (source material)
 tools/backup.py     CLI for Backup.bin: info / list / get / known / diff

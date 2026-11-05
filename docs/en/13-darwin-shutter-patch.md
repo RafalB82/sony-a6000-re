@@ -114,7 +114,7 @@ write would land.
 
 | Item | State | Comment |
 |---|---|---|
-| **Operation 5 (brake)** | active | `0x1f600 → 0x1fcb8 → 0x1feb6` writes P40=P41=1 (`PDOR4 0x51cc`, `r1=3`, `r2=0xfffc`), no gate. XOR of P40/P41 = 0, so in the documented circuit (Q6801 driven by IC6800 XOR) this is passive, **not** a movement order. Physical effect never measured |
+| **Operation 5 (brake)** | active | `0x1f600 → 0x1fcb8 → 0x1feb6` writes P40=P41=1 (`PDOR4 0x51cc`, `r1=3`, `r2=0xfffc`), no gate. With the XOR gate the schematic actually has ([16](16-service-manual.md) §5.3), `1⊕1 = 0`, i.e. no drive — the word "brake" is an interpretation, not a reading of the schematic. Physical effect never measured |
 | `P4B` (`0x22c`, bit 11) | active | occupancy signalling, mask `0x800` |
 | `P4C` (`0x230`) | active | set/cleared per shot via `0x1ecec`; corrects an earlier claim that only zero was written |
 | Error 6 at `0x1989c` | active | ADC position check; can queue operation 5, cannot move the motor by itself |

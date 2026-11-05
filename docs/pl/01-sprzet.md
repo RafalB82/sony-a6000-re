@@ -50,12 +50,15 @@ matryca ──► DFE CXD90027GF ──► SoC CXD90014 ──► (tylko A6300: 
 
 ## Pamięć
 
-NAND to jedno urządzenie **463,75 MiB** (`0x00000000`–`0x1BAC0000`), podzielone na
+NAND to jedno logiczne urządzenie **463,75 MiB** (`0x00000000`–`0x1BAC0000`) — matryca jest
+w stosie z SoC, więc nie ma dyskretnej kości NAND do wylutowania
+([16](16-serwisowka.md) §6) — podzielone na
 15 partycji bez dziur. Tabela i szczegóły: [02-struktura-firmware.md](02-struktura-firmware.md).
 
 ## Źródła tego dokumentu
 
-- Sony `ILCE-6000/6000L/6000Y` SERVICE MANUAL LEVEL 3 (5 arkuszy).
+- Sony `ILCE-6000/6000L/6000Y` SERVICE MANUAL LEVEL 3 (54 strony; mapa arkuszy w
+  [16-serwisowka.md](16-serwisowka.md)).
 - Sony `ILCE-6300/6300L/6300M` SERVICE MANUAL LEVEL 3 (65 stron) — porównanie.
 - `ma1co/OpenMemories-Docs` → `hardware.rst` — rodziny SoC/DFE/kodek, uwaga o µITRON.
 - Stringi z firmware: `C_ImagerCtrl_IMX210E`, `SHD::Regulus`, `Hello Regulus`.

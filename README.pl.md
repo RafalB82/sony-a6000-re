@@ -36,6 +36,7 @@ Uporządkowana baza wiedzy o platformie ILCE-6000:
 | 13 | [Patch Darwina](docs/pl/13-patch-darwina.md) | Dwa bajty w MCU zasilania/migawki: co wyłączają i co zostaje żywe |
 | 14 | [Selektor EFCS/Electronic](docs/pl/14-selektor-efcs.md) | Dodana funkcja trybu migawki, jej cave'y i czemu sygnał nie dochodzi do Darwina |
 | 15 | [Ekspozycja i jednorodność](docs/pl/15-ekspozycja-i-jednorodnosc.md) | Co cicha migawka daje naprawdę: 7 ms, 15,2 µs/wiersz, odczyt 61 ms i poprawka w RAM |
+| 16 | [Serwisówka](docs/pl/16-serwisowka.md) | Mapa arkuszy, kule i złącza debugowania oraz jak realnie okablowana jest migawka |
 | — | [Źródła](docs/pl/99-zrodla.md) | Odnośniki z oceną wiarygodności |
 
 Surowsze, dłuższe notatki robocze (z których powstały oba zestawy) leżą w
@@ -60,7 +61,7 @@ Surowsze, dłuższe notatki robocze (z których powstały oba zestawy) leżą w
 ## Zawartość repozytorium
 
 ```
-docs/en/            dokumenty angielskie (01–15, 99)
+docs/en/            dokumenty angielskie (01–16, 99)
 docs/pl/            polskie tłumaczenia tego samego zestawu
 docs/pl/raw/        oryginalne polskie notatki robocze (materiał źródłowy)
 tools/backup.py     CLI do Backup.bin: info / list / get / known / diff

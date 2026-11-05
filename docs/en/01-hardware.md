@@ -50,12 +50,15 @@ sensor ──► DFE CXD90027GF ──► SoC CXD90014 ──► (A6300 only: co
 
 ## Storage
 
-NAND is a single device of **463.75 MiB** (`0x00000000`–`0x1BAC0000`), split into
+NAND is a single logical device of **463.75 MiB** (`0x00000000`–`0x1BAC0000`) — the die is
+stacked with the SoC, so there is no discrete NAND package to desolder
+([16](16-service-manual.md) §6) — split into
 15 partitions with no gaps. Table and details: [02-firmware-layout.md](02-firmware-layout.md).
 
 ## Sources for this document
 
-- Sony `ILCE-6000/6000L/6000Y` SERVICE MANUAL LEVEL 3 (5 sheets) — chip references above.
+- Sony `ILCE-6000/6000L/6000Y` SERVICE MANUAL LEVEL 3 (54 pages; sheet map in
+  [16-service-manual.md](16-service-manual.md)) — chip references above.
 - Sony `ILCE-6300/6300L/6300M` SERVICE MANUAL LEVEL 3 (65 pages) — comparison.
 - `ma1co/OpenMemories-Docs` → `hardware.rst` — SoC/DFE/codec families, µITRON note.
 - Firmware strings: `C_ImagerCtrl_IMX210E`, `SHD::Regulus`, `Hello Regulus`.

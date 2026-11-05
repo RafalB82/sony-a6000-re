@@ -113,7 +113,7 @@ by doszedł.
 
 | Element | Stan | Komentarz |
 |---|---|---|
-| **Operacja 5 (hamulec)** | aktywna | `0x1f600 → 0x1fcb8 → 0x1feb6` pisze P40=P41=1 (`PDOR4 0x51cc`, `r1=3`, `r2=0xfffc`), bez bramki. XOR P40/P41 = 0, więc w udokumentowanym obwodzie (Q6801 sterowany z IC6800 XOR) to stan pasywny, **nie** rozkaz ruchu. Efekt fizyczny niezmierzony |
+| **Operacja 5 (hamulec)** | aktywna | `0x1f600 → 0x1fcb8 → 0x1feb6` pisze P40=P41=1 (`PDOR4 0x51cc`, `r1=3`, `r2=0xfffc`), bez bramki. Przy bramce XOR, która faktycznie jest w schemacie ([16](16-serwisowka.md) §5.3), `1⊕1 = 0`, czyli brak napędu — słowo „hamulec" to interpretacja, nie odczyt schematu. Efekt fizyczny niezmierzony |
 | `P4B` (`0x22c`, bit 11) | aktywny | sygnalizacja zajętości, maska `0x800` |
 | `P4C` (`0x230`) | aktywny | ustawiany/czyszczony na każde zdjęcie przez `0x1ecec`; koryguje wcześniejsze twierdzenie, że pisane jest tylko 0 |
 | Błąd 6 pod `0x1989c` | aktywny | kontrola pozycji z ADC; może zakolejkować operację 5, sam silnika nie ruszy |
