@@ -61,7 +61,7 @@ Dla Sony — nie.
 
 | Temat | Stan |
 |---|---|
-| **Wgranie zmodyfikowanego obrazu partycji do aparatu** | **brak relacji** — ostatni krok |
+| **Wgranie zmodyfikowanego obrazu partycji do aparatu** | **zrobione raz, IX–XI 2026, nie przez nas** — patrz §6 |
 | Którego wariantu enkodera AVC używa A6000 | nieznane |
 | Jakakolwiek analiza programów `sabin` poza specyfikacją Ghidry | brak |
 | Wtyczki `/usr/scenario` (35 `.so` + `scenario.elf`) | zero publikacji |
@@ -69,7 +69,26 @@ Dla Sony — nie.
 | Analiza `dfe.bin` | brak przed tą pracą |
 | Emulacja A6000 w QEMU | nie zrobiona (inne modele tak) |
 
-## 6. Twierdzenia, które okazały się błędne
+## 6. nicolvus/a6000-fw-decomp (2026) — ostatni krok, przejechany raz
+
+[`nicolvus/a6000-fw-decomp`](https://github.com/nicolvus/a6000-fw-decomp) to jedyny
+znany publiczny projekt, który wgrał zmodyfikowany obraz do A6000 i opisał wynik.
+Raporty po hiszpańsku (542, z etykietami `MEDIDO`/`INFERENCIA`/`NO VERIFICADO`),
+dwujęzyczna wiki i pakiety `.dat` w release'ach GitHuba.
+
+| Osiągnięcie | Szczegóły | Nasza ocena |
+|---|---|---|
+| **Zmodyfikowany `darwin_core.bin` działa** | 2 bajty pod `0x1fe6a` (`28 46` → `0a e0`) — bramka mechanizmu zawsze zwraca 0, migawka mechaniczna nie jest napędzana. Potwierdzone na prawdziwym aparacie: cichy strzał bez błędu | spójne z naszym [03](03-integralnosc.md) — brak podpisów, tylko CRC32 |
+| **Rekompresja `nflasha3`** | Ich 3.25 uceglił aparat; przyczyna znaleziona offline (reszta sektora TPZL + zła geometria rekordów) i naprawiona w 3.25c | najcenniejsza rzecz w repo: ograniczenia formatu dekompresora |
+| **Odzysk po SWD** | Uceglony aparat odzyskany przez wymuszenie jednego rejestru CPU podczas bootu; fabryczny updater wgrał oficjalne 3.26 | patrz [11-odzysk-swd.md](11-odzysk-swd.md) |
+| **Migawka elektroniczna** | Dodany selektor w menu BIONZ; na 04-11-2026 przełącza się wewnątrz BIONZ, ale wartość nie dochodzi do Darwina | **nie działa** — nie traktować jako zrobione |
+| **Prawo** | Publikują `.dat` Sony (po 213 MB) z jawną notą, że nie mają licencji | ryzyko redystrybucji jest ich, nie nasze |
+
+Warto też wiedzieć: ich E25-10 zmierzył ekspozycję wiersz po wierszu bez tylnej
+kurtyny (`T + ~7 ms + 15,2 µs × wiersz`, odczyt ≈ 61 ms) — to ogranicza, co „cicha
+migawka" realnie daje na tej matrycy.
+
+## 7. Twierdzenia, które okazały się błędne
 
 - `CliffVale/sony-a6000-firmware-research` — prawdziwa metodologia zrzutu i poprawne
   offsety *startów* partycji, ale tabela „byte-identical" jest policzona z zaokrąglonych

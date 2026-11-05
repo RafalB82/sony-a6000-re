@@ -126,3 +126,6 @@ and at CLI level: `info`, `shell`, **`bootrom`**, `bootloader`, `push`, `pull`,
   still leave the camera without preview or AF.
 - `updatershell` can write; writing to the wrong region bricks the device. Only
   read-only commands (`pull`, `ls`, `cat`) were ever exercised here.
+- Everything on this page concerns packages whose **content** is unchanged. Changing the
+  content of a partition image has its own rules — alignment, record geometry and a
+  hidden hardware decompressor: see [12-partition-format.md](12-partition-format.md).

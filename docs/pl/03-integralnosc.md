@@ -125,3 +125,6 @@ Na poziomie CLI: `info`, `shell`, **`bootrom`**, `bootloader`, `push`, `pull`,
   może zostawić aparat bez podglądu lub bez AF.
 - `updatershell` potrafi zapisywać; zapis w złe miejsce = brick. Używane były wyłącznie
   komendy read-only (`pull`, `ls`, `cat`).
+- Wszystko powyżej dotyczy pakietów, których **treść** się nie zmienia. Zmiana treści
+  obrazu partycji rządzi się własnymi prawami — wyrównanie, geometria rekordów i ukryty
+  sprzętowy dekompresor: patrz [12-format-partycji.md](12-format-partycji.md).

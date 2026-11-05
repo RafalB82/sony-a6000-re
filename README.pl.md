@@ -31,6 +31,11 @@ Uporządkowana baza wiedzy o platformie ILCE-6000:
 | 08 | [Modele bliźniacze](docs/pl/08-modele-blizniacze.md) | 66 modeli CXD90014, A6000 vs A6300, czemu 4K jest niemożliwe |
 | 09 | [Prior art](docs/pl/09-prior-art.md) | Kto już tą drogą szedł i gdzie się zatrzymał |
 | 10 | [Pytania otwarte](docs/pl/10-pytania-otwarte.md) | Co jeszcze nie wiadomo i jak to ugryźć |
+| 11 | [SWD i odzysk](docs/pl/11-odzysk-swd.md) | Port debugowania, iniekcja jednego rejestru uruchamiająca fabryczny updater, odzysk uceglonego aparatu |
+| 12 | [Obrazy partycji (TPZL)](docs/pl/12-format-partycji.md) | Nieudokumentowany format kompresji i ograniczenia, które decydują o tym, czy zmodyfikowany obraz wystartuje |
+| 13 | [Patch Darwina](docs/pl/13-patch-darwina.md) | Dwa bajty w MCU zasilania/migawki: co wyłączają i co zostaje żywe |
+| 14 | [Selektor EFCS/Electronic](docs/pl/14-selektor-efcs.md) | Dodana funkcja trybu migawki, jej cave'y i czemu sygnał nie dochodzi do Darwina |
+| 15 | [Ekspozycja i jednorodność](docs/pl/15-ekspozycja-i-jednorodnosc.md) | Co cicha migawka daje naprawdę: 7 ms, 15,2 µs/wiersz, odczyt 61 ms i poprawka w RAM |
 | — | [Źródła](docs/pl/99-zrodla.md) | Odnośniki z oceną wiarygodności |
 
 Surowsze, dłuższe notatki robocze (z których powstały oba zestawy) leżą w
@@ -55,7 +60,7 @@ Surowsze, dłuższe notatki robocze (z których powstały oba zestawy) leżą w
 ## Zawartość repozytorium
 
 ```
-docs/en/            dokumenty angielskie (01–10, 99)
+docs/en/            dokumenty angielskie (01–15, 99)
 docs/pl/            polskie tłumaczenia tego samego zestawu
 docs/pl/raw/        oryginalne polskie notatki robocze (materiał źródłowy)
 tools/backup.py     CLI do Backup.bin: info / list / get / known / diff

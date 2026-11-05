@@ -31,6 +31,11 @@ A structured knowledge base about the ILCE-6000 platform:
 | 08 | [Sibling models](docs/en/08-sibling-models.md) | The 66 CXD90014 models, A6000 vs A6300, why 4K is impossible |
 | 09 | [Prior art](docs/en/09-prior-art.md) | Who already walked this path, and where they stopped |
 | 10 | [Open questions](docs/en/10-open-questions.md) | What is still unknown and how to attack it |
+| 11 | [SWD and recovery](docs/en/11-swd-recovery.md) | The debug port, the one-register injection that boots the factory updater, how a bricked camera was recovered |
+| 12 | [Partition images (TPZL)](docs/en/12-partition-format.md) | The undocumented compression format, and the constraints that make a modified image boot |
+| 13 | [Darwin shutter patch](docs/en/13-darwin-shutter-patch.md) | Two bytes in the power/shutter MCU: what they disable, what stays alive |
+| 14 | [EFCS/Electronic selector](docs/en/14-efcs-selector.md) | The added shutter-mode function, its caves, and why the signal never reaches Darwin |
+| 15 | [Exposure and uniformity](docs/en/15-exposure-and-uniformity.md) | What the silent shutter really gives: 7 ms, 15.2 µs/row, 61 ms readout, and the RAM fix |
 | — | [Sources](docs/en/99-sources.md) | References with a credibility grade per source |
 
 Polish originals (working notes, longer and messier) live in
@@ -55,7 +60,7 @@ Polish originals (working notes, longer and messier) live in
 ## Repository contents
 
 ```
-docs/en/            English documents (01–10, 99)
+docs/en/            English documents (01–15, 99)
 docs/pl/            Polish translations of the same set
 docs/pl/raw/        original Polish working notes (source material)
 tools/backup.py     CLI for Backup.bin: info / list / get / known / diff

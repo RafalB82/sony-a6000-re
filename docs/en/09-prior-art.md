@@ -62,7 +62,7 @@ it has not.
 
 | Topic | Status |
 |---|---|
-| **Flashing a modified partition image onto a real camera** | **no public report** — the last mile |
+| **Flashing a modified partition image onto a real camera** | **done once, September–November 2026, not by us** — see §6 |
 | Which AVC encoder variant the A6000 uses | unknown |
 | Any analysis of `sabin` programs beyond the Ghidra spec | none |
 | `/usr/scenario` plug-ins (35 `.so` + `scenario.elf`) | zero published work |
@@ -70,7 +70,26 @@ it has not.
 | `dfe.bin` analysis | none before this work |
 | Emulating the A6000 in QEMU | not done (other models are) |
 
-## 6. Claims that turned out to be wrong
+## 6. nicolvus/a6000-fw-decomp (2026) — the last mile, walked once
+
+[`nicolvus/a6000-fw-decomp`](https://github.com/nicolvus/a6000-fw-decomp) is the only
+public project known to have put a modified image on an A6000 and reported the result.
+Spanish-language reports (542 of them, labelled `MEDIDO`/`INFERENCIA`/`NO VERIFICADO`),
+a bilingual wiki, and firmware `.dat` packages in GitHub releases.
+
+| Achievement | Detail | Our assessment |
+|---|---|---|
+| **Modified `darwin_core.bin` works** | 2 bytes at `0x1fe6a` (`28 46` → `0a e0`) make the mechanism gate always return 0, so the mechanical shutter is never driven. Confirmed on a real camera: silent shot, no error | consistent with our [03](03-integrity-and-flashing.md) — no signatures, only CRC32 |
+| **`nflasha3` recompressed** | Their 3.25 bricked the camera; cause found offline (TPZL sector residue + wrong record geometry) and fixed in 3.25c | the single most useful thing in the repo: the decompressor's format constraints |
+| **SWD recovery** | Bricked camera recovered by forcing one CPU register during boot; the factory updater then installed official 3.26 | see [11-swd-recovery.md](11-swd-recovery.md) |
+| **Electronic shutter** | A menu selector was added to BIONZ; as of 2026-11-04 it switches inside BIONZ but the value never reaches Darwin | **not working** — do not take it as done |
+| **Legal** | They publish Sony `.dat` (213 MB each) with an explicit note that they hold no licence | redistribution risk is theirs, not ours |
+
+Also worth knowing: their E25-10 measured row-by-row exposure without the rear curtain
+(`T + ~7 ms + 15.2 µs × row`, readout ≈ 61 ms), which bounds what "silent shutter"
+actually buys on this sensor.
+
+## 7. Claims that turned out to be wrong
 
 - `CliffVale/sony-a6000-firmware-research` — real dump methodology and correct
   partition start offsets, but its "byte-identical verification" table is computed from
