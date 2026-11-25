@@ -115,7 +115,9 @@ The CFG table sits at `0xc005c000`, stride `0x90`, mode mask at `+0xc`:
 
 The first file from partition 3 fails and the loader stops there — so `nflasha3`
 really is unreadable, and the format hypothesis in their R36 is confirmed by
-measurement.
+measurement. Their own precision: what is measured is *that* −302 comes from the first
+file of partition 3 (R47 §15); that the reason is the compression format specifically
+remains an **INFERENCE** on their side.
 
 ## 6. The injection: make `\updater\mode` "exist" without writing anything
 
@@ -193,7 +195,36 @@ SWD" were dropped — no mechanism, not just risk.
   reachable, whether the eFuse blocks *writing* through the port, and any external
   NAND dump.
 
-## 10. Why it matters for this repository
+## 10. After the recovery: where the camera stands now (updated 2026-11-25)
+
+The 03-11 recovery was not the end of the experiments — since then the same camera went
+through:
+
+| Date | Firmware | What happened |
+|---|---|---|
+| 03-11 | 3.26 (official content) | the recovery from [§7](#7-the-recovery-run) |
+| 04-11 | 3.27 → 3.30 | first working electronic shutter (R54) |
+| 04-11 | 3.33–3.37 | inline patches instead of caves; 3.37 = official Sony content as reference (R57) |
+| 08–11-11 | 3.43 → 3.76/3.77 | Darwin v3 + EFCS tables in NVRAM; three modes leveled (R84–R87) |
+| 23-11 | "3.91" | **official Sony 3.21 content** with a bumped version number — no Silent, EFCS patches or CFW (user's request; the updater only accepts higher versions) |
+| 24-11 | CFW 3.92 | Film: Picture Profiles, Film Simulation, Extra fine, Silent, ISO up to 204800 |
+
+Two observations matter for this document. First, **the SWD route turned out to be
+reusable**: CFW installs sometimes hit a Darwin NG (`0x1063` at 45 %) and at least once
+the camera was rescued again by the SWD-forced updater (Film build 3.95, 24-11). Second,
+SWD on the camera now also serves as a **diagnostic console** — NVRAM reads, kernel logs
+via AHB-AP (CAM-394), measuring patch state in RAM — not only for rescue.
+
+If you want to go further, their reports after 03-11:
+[R54](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r54-paquete-330-envio-pkt0e.md),
+[R56](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r56-paquete-333-envio-inline.md),
+[R57](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r57-paquete-336-darwin-eq1.md),
+[R84](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r84-darwin-v3-en-camara.md),
+[R86](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r86-cfw-376-tres-modos-nivelados.md);
+they track the camera's current state in their own
+[docs/STATE.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/STATE.md).
+
+## 11. Why it matters for this repository
 
 - It is the only documented way back from a bad `nflasha3`, and it depends on
   exactly the property we established in

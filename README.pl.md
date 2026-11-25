@@ -34,7 +34,7 @@ Uporządkowana baza wiedzy o platformie ILCE-6000:
 | 11 | [SWD i odzysk](docs/pl/11-odzysk-swd.md) | Port debugowania, iniekcja jednego rejestru uruchamiająca fabryczny updater, odzysk uceglonego aparatu |
 | 12 | [Obrazy partycji (TPZL)](docs/pl/12-format-partycji.md) | Nieudokumentowany format kompresji i ograniczenia, które decydują o tym, czy zmodyfikowany obraz wystartuje |
 | 13 | [Patch Darwina](docs/pl/13-patch-darwina.md) | Dwa bajty w MCU zasilania/migawki: co wyłączają i co zostaje żywe |
-| 14 | [Selektor EFCS/Electronic](docs/pl/14-selektor-efcs.md) | Dodana funkcja trybu migawki, jej cave'y i czemu sygnał nie dochodzi do Darwina |
+| 14 | [Selektor EFCS/Electronic](docs/pl/14-selektor-efcs.md) | Dodana funkcja trybu migawki: od uceglenia do działającej migawki elektronicznej (3.30) i tablic EFCS w NVRAM |
 | 15 | [Ekspozycja i jednorodność](docs/pl/15-ekspozycja-i-jednorodnosc.md) | Co cicha migawka daje naprawdę: 7 ms, 15,2 µs/wiersz, odczyt 61 ms i poprawka w RAM |
 | 16 | [Serwisówka](docs/pl/16-serwisowka.md) | Mapa arkuszy, kule i złącza debugowania oraz jak realnie okablowana jest migawka |
 | — | [Źródła](docs/pl/99-zrodla.md) | Odnośniki z oceną wiarygodności |

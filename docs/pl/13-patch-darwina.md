@@ -141,6 +141,25 @@ prawdziwym kontrolerem z własną maszyną stanów, nie tylko sekwencerem zasila
 konkretne nazwy GPIO (P40/P41 silnik, P4D/P4E cewki, P4B/P4C zajętość), których nasze
 [01](01-sprzet.md) i [02](02-struktura-firmware.md) nie zawierają.
 
+## 9. Co poszło dalej (akt. 25-11-2026)
+
+Patch 2-bajtowy okazał się fundamentem, a nie końcem historii Darwina:
+
+- **Bramka per zdjęcie (3.30+).** Po odkryciu, że prawdziwym produktem `pkt[0x0e]` jest
+  konstruktor wysyłki BIONZ (R54), ta sama komora `0x4318` stała się przełącznikiem trybu:
+  zwraca 0 tylko przy pakiecie zdjęcia elektronicznego, a przy EFCS wykonuje oryginalną
+  ścieżkę. Statyczne tłumienie z 3.23 to przypadek szczególny (`pkt[0x0e]` nieustannie 0).
+- **Darwin v3 (R82–R84).** Komora dociągnięta o odczyt tablicy kompensacji EFCS z
+  **NVRAM** (`0x1850000+0x48`, 56 B); Darwin stosuje `c` per czas migawki. Potwierdzone
+  na aparacie: zapis NVRAM zmienia zachowanie Darwina (EFCS przestaje wychodzić czarny).
+  Zmiana to in-situ przepisanie `0x18d6e..0x18e0f` — adresy w tym samym core, co patch
+  z tego dokumentu.
+- **Zakres reszty Darwinów nietknięty.** Także w v3 `nflasha15` pozostaje Sony;
+  modyfikacja ogranicza się do `darwin_core.bin` (+ suma) — czyli do zasady „2 bajty, nie
+  więcej" podniesionej do „jedno plik+tablica".
+
+Szczegóły elektronicznej i kalibracji: [14](14-selektor-efcs.md) §5/§5a.
+
 Raporty: [E25](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-desactivacion-mecanica.md) (mechanizm, 12 konsumentów, macierze),
 [E25-05](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-05-preparacion-paquetes-323-324.md) (pakowanie 3.23/3.24),
 [E24-05a](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e24-05a-captura-fin-bionz-darwin.md) (protokół BIONZ↔Darwin),

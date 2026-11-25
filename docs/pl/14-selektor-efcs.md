@@ -1,13 +1,19 @@
-# 14 — Selektor EFCS/Electronic: czemu menu działa, a migawka nie
+# 14 — Selektor EFCS/Electronic: od uceglenia do działającej migawki elektronicznej
 
 To jedyna znana próba *dodania funkcji* — selektora trybu migawki — i zarazem ta, która
-ucegliła aparat. Kod jest na miejscu i robi to, co miał robić, wewnątrz BIONZ; sygnał,
-który produkuje, nie dochodzi do Darwina w sposób wiarygodny. Na 04-11-2026 migawka
-elektroniczna nie działa.
+najpierw ucegliła aparat, a potem okazała się działającą drogą do cichej migawki. Kod
+selektora w BIONZ robił swoje, ale sygnał ginął: prawdziwym produktem bajtu `pkt[0x0e]`
+okazał się konstruktor **wysyłki** `0x438d0064`, nie konstruktor capture (R54). Po
+przekierowaniu wysyłki **migawka elektroniczna działa od 3.30** (04-11-2026). Ten sam
+cykl ujawnił drugą rzecz: **EFCS włączony wychodzi czarny od 1/1000 także na czystym
+firmware Sony** (R57 §5) — to wada samej ścieżki aparatu, naprawiana później tablicą
+kalibracyjną w NVRAM (R84–R86).
 
 > **Źródło i status.** Z [`nicolvus/a6000-fw-decomp`](https://github.com/nicolvus/a6000-fw-decomp),
-> raporty E25-24, E25-24b, E25-25, E25-26, E25-27, E26-R52, E26-R53, z pomiarami na
-> prawdziwym aparacie (sonda SWD). Etykiety ich autorstwa zachowane. **Nie sprawdzone przez nas.**
+> raporty E25-24, E25-24b, E25-25, E25-26, E25-27, E26-R52, R53 (selektor), R54–R57
+> (elektroniczna), R66–R68 (czarne EFCS), R84–R87 (Darwin v3, tablice EFCS), z pomiarami na
+> prawdziwym aparacie (sonda SWD). Etykiety ich autorstwa zachowane. **Nie sprawdzone przez
+> nas.** Zaktualizowano 25-11-2026.
 
 ## 1. Pomysł
 
@@ -115,11 +121,33 @@ urządzeń 2/3 nadpisują selektor zerem) → slot `+0x28` → IMX210 `0x436d6f6
 | 3.27, EFCS off | selektor działa *wewnątrz* BIONZ: `+0x210 = 1` → `cap+0x41c = 1` → cave pisze `pkt[0x0e] = 1` → zaobserwowane breakpointem (`r1=1`, `pc=0x43541800`); watchpoint zapisu potwierdził, że cave zapisuje 1. Wartość żyje **< 1 ms** w buforze konstruktora, a bufor *wysłany* czyta 0 |
 | 3.27, próbkowanie | 1 widziane raz przez AHB w momencie zdjęcia, nigdy w buforze wychodzącym; późniejszy raport wycofał jeden „rutynę wysyłki" (`0x4382fac8` to konwersja na µs, nie nadawca) |
 | 3.29 | cave przepisana tak, żeby czytać pole EFCS na żywo zamiast `[sb+0x41c]`; **wgrana i zmierzona**: pakiet capture niesie 1, ale 2 ms później bufor wraca do pakietu spoczynkowego (`pkt[0x0e]=0`), czyli coś go przywraca. Dźwięk bez zmian („el fix no funciona") |
+| 3.30 | **elektroniczna działa.** Prawdziwy producent `pkt[0x0e]` to konstruktor wysyłki `0x438d0064` (`strb.w r3,[r2,#0x4e]` pod `0x438d01fa`), który nadpisywał 1 selektora przy każdym wysłaniu (R54 §1). Nowa 16-bajtowa cave pod `0x43541820` wpina się w `0x438d01fa` i pisze `pkt[0x0e]` = ustawienie EFCS przy *każdym* wysłaniu. Zdjęcie bez kurtyny potwierdzone przez użytkownika (EFCS off, MEDIDO). Ekspozycja: dopiero z patchem RAM aplikacji (ShutMode 0 + `r5`, kalibracja 1/250), patrz [13](13-patch-darwina.md) |
+| 3.33–3.35 | **bez cave'ów, blok TPZL 0 nienaruszony** (zmieniają się tylko bloki 48 i 57): patch inline w samym `0x438d0064` (3.33), a od 3.34/3.35 także w konstruktorze zdjęcia `0x43841070`, obejmujący obie gałęzie (R56). Wiszący adb z [11](11-odzysk-swd.md) okazał się skutkiem zmodyfikowanego bloku 0 — po jego odtworzeniu adb działa (R56 §4) |
+| 3.36 / 3.37 | komora Darwina `== 1` nie była przyczyną czarnych klatek: na **oficjalnej treści Sony 3.37** EFCS włączony wychodzi czarny od 1/1000, także na mechanicznej migawce — to wada samej ścieżki EFCS w tym aparacie, nie patcha (R57 §5). Referencją ekspozycji jest EFCS off na 3.37 (pełny mechaniczny) |
+| 3.43 + tablica w NVRAM | Darwin v3 (R82–R84): ta sama komora plus tabela kompensacji czytana z **NVRAM** `0x1850000+0x48`. Z tablicą testową (`c` = 2000 µs na wszystko) EFCS włączony **przestaje wychodzić czarny, włącznie z 1/4000** (MEDIDO) — zapis NVRAM rzeczywiście dochodzi do Darwina |
+| 3.76 / 3.77 | trzy tryby wypoziomowane (R85–R87): mechaniczny = referencja; EFCS wyrównany skalibrowaną tablicą w NVRAM (strata ≈ 1,0–1,25 ms); Silent w obrazie (hook `0x438c82fe`, ten sam co C3-B: ShutMode 0 + `r5` z Tv, cap 4218 ≈ 1 linia opóźnienia). CFW 3.76 zainstalowany 11-11, tablica EFCS zapisana skryptem service-mode |
 
 Ich najnowsze pomiary (R53 §7) lokują prawdziwego emitenta zdarzenia 1 pod `0x436b8a50`
 (kopiuje `payload+0x40` → `0x43f91e32`); na breakpoincie tam widok CPU bufora pokazuje
 `pkt[0x0e]=0`, a widok AHB tego samego adresu 1 — artefakt spójności cache, który czyni
-część wcześniejszego próbkowania niewiarygodną.
+część wcześniejszego próbkowania niewiarygodną. (To akapit historyczny: R54 rozwiązał
+zagadkę prościej — nadpisującym wysłaniem.)
+
+### 5a. Po 04-11: czarne EFCS i naprawa tablicą
+
+Czarne klatki przy EFCS włączonym (na 3.35/3.36 i na czystym Sony) mają zmierzoną
+przyczynę czasową: strata ≈ **1,0–1,25 ms** w pętli EFCS (R85), do tego pionowy gradient —
+różnica między górą a dołem klatki rośnie od ≈0,9 ms (1/350) do ≈1,8 ms (1/3000) (R83 §5).
+Naprawa nie była w BIONZ: Darwin czyta tablicę kompensacji z **NVRAM** (`0x1850000+0x48`,
+56 B, checksum, synchronizacja do flasha), a Darwin v3 (R82–R84, in-situ
+`0x18d6e..0x18e0f`) stosuje `c` per czas. Zdjęcia DSC03749–03806 dały skalibrowane
+tablice (R85, R86); przewidywana ekspozycja 0,985–1,015·T od 1/4000 do 1/30.
+
+Limity (MEDIDO): gradientu pionowego tablica nie wyrównuje — EFCS jest równy tylko
+uśredniony, od ~1/1000 w górę używać mechanicznego albo elektronicznego (R85 §3.1).
+Silent szybko: powyżej ~1/600 model daje ≤ 0 linii, czyli podłoga ekspozycji ≈ 1,7 ms
+ekwiwalentu (`r5` cap 4218); patch subliniowy pod ten limit istnieje tylko w emulacji,
+bez CFW (G38).
 
 ## 6. Dlaczego nie zrobili bramki w Darwinie „lepkiej"
 
@@ -130,18 +158,28 @@ ma dziur z zerami. Dlatego zmiana przeniosła się do źródła danych w BIONZ.
 
 ## 7. Ograniczenia
 
-- **Migawka elektroniczna nie działa.** Działającym wynikiem na sprzęcie pozostaje 3.23
-  (patch 2-bajtowy Darwina, [13](13-patch-darwina.md)).
+- **Migawka elektroniczna działa** — od 3.30 (R54), z kalibrowaną ekspozycją od 3.35
+  (R56 §7) i w obrazie od 3.76 (R86). Pierwszy działający krok na sprzęcie pozostaje 3.23
+  ([13](13-patch-darwina.md)).
+- **EFCS włączony ma wadę sprzed patcha:** czarny od 1/1000 na oficjalnym Sony 3.37
+  (R57 §5). Przyczyna fizyczna nieznana (kandydaci: kalibracja utracona przy odzysku,
+  hardware sensora/kurtyny — NO VERIFICADO); kompensowana tablicą NVRAM z limitami z §5a.
 - Nie wiadomo, co Darwin dostaje w momencie zdjęcia ani co widzi bramka `0x4318`; odczyt
   RAM Darwina (`0x20003716`) wymaga sondy na `CN4906` piny 11/12 (to linie SWD BIONZ, nie
   Darwina).
 - W BIONZ opóźnienie w łańcuchu wywołań powoduje, że `S+0x30..0x47` jest czyszczone tylko
   na starcie zadania (`0x196fa`, wołane raz z `0x1815c`); `0x1b080` czyta 24 miejsca,
   a tylko `0x20c78`/`0x1fe6c` przechodzą przez cave.
-- Trójstan (MECHANICAL/EFCS/ELECTRONIC) zaprojektowano, ale nie zaimplementowano: wymagałby
-  trzeciej trwałej wartości, a A6000 nie wystawia ustawienia Silent w menu.
-- Powtórzenie ich przebiegu oznacza wgranie zmodyfikowanego `nflasha3` — patrz
-  [12](12-format-partycji.md), ile to kosztuje, i [11](11-odzysk-swd.md), jak wrócić.
+- **Podejście cave'owe zostało wycofane:** od 3.33 patche BIONZ są inline, bez cave'ów,
+  z blokiem TPZL 0 nienaruszonym (zmieniają się bloki 48/57); to też rozwiązało wiszący
+  adb (R56 §4). Pozostałe cave'y BIONZ (`0x43541800/1820/1840`) i komora Darwina `0x4318`
+  zostają w buildach CFW.
+- Trójstan (MECHANICAL/EFCS/ELECTRONIC) zrealizowano inaczej niż zaprojektowano: nie przez
+  trzecią trwałą wartość w menu, tylko przez kompozycję — Silent w obrazie warunkowany
+  swoim bajtem (`cap+0x41d`), EFCS wyrównany tablicą NVRAM, mechaniczny bez zmian (R86 §1).
+- Powtórzenie ich przebiegu oznacza wgranie zmodyfikowanego firmware (instalacja
+  `pmca-console firmware`, często pierwszy `0x1063` do powtórzenia) — ryzyko bez zmian:
+  **brak niezależnego odzysku** (E24-04/E25-04), droga powrotem to [11](11-odzysk-swd.md).
 
 ## 8. Dlaczego to ważne dla nas
 
@@ -150,10 +188,18 @@ To odpowiada — kodem i pomiarami — na pytanie, które nasze
 ukrytym enumem czekającym na przełączenie. Aparat ma w tej ścieżce dokładnie dwa stany
 (EFCS on/off), matryca dostaje instrukcje z pola `ShutMode` per zdjęcie, a tłumienie
 mechaniki jest właściwością komórki konfiguracyjnej Darwina — dlatego działa patch
-2-bajtowy, a funkcja za 100 bajtów w BIONZ jeszcze nie.
+2-bajtowy. Funkcja w BIONZ zaczęła działać dopiero, gdy patch objął prawdziwego
+producenta bajtu (konstruktor wysyłki, R54), a ekspozycję skalibrowano osobno — najpierw
+patchem RAM, potem hookiem w obrazie (R86).
 
 Raporty: [E25-24](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-24-selector-efcs-electronico.md) (audyt i blokady),
 [E25-24b](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-24b-implementacion-selector.md) (implementacja, cave'y, emulacja),
 [E25-26](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-26-c3b-exposicion-electronica.md) (C3-B),
 [E25-27](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-27-construccion-firmware-integrado.md) (build zintegrowany),
-[R52](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r52-prueba-fisica-selector-327.md) / [R53](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r53-paquete-329-ajuste-efcs-en-vivo.md) (co zmierzył aparat).
+[R52](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r52-prueba-fisica-selector-327.md) / [R53](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r53-paquete-329-ajuste-efcs-en-vivo.md) (co zmierzył aparat),
+[R54](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r54-paquete-330-envio-pkt0e.md) (wysyłka, pierwsza elektroniczna),
+[R56](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r56-paquete-333-envio-inline.md) (inline, 3.33–3.35, kalibracja),
+[R57](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r57-paquete-336-darwin-eq1.md) (komora ==1, czyste EFCS na Sony),
+[R66](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r66-bloques-darwin-en-nvram-1850000.md) (bloki Darwina w NVRAM),
+[R84](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r84-darwin-v3-en-camara.md) (Darwin v3 na aparacie),
+[R85](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r85-calibracion-fotos-3749-3779.md) / [R86](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r86-cfw-376-tres-modos-nivelados.md) (tablice EFCS, trzy tryby).

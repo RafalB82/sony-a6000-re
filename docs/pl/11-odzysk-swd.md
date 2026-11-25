@@ -114,7 +114,9 @@ Tabela CFG leży pod `0xc005c000`, krok `0x90`, maska trybu na `+0xc`:
 
 Pierwszy plik z partycji 3 nie daje się odczytać i loader zatrzymuje się tam — czyli
 `nflasha3` naprawdę jest nieczytelna, a hipoteza o formacie z ich R36 potwierdza się
-pomiarem.
+pomiarem. Precyzja z ich raportów: zmierzone jest *to, że* −302 wychodzi z pierwszego
+pliku partycji 3 (R47 §15); że powodem jest konkretnie format kompresji, pozostaje po ich
+stronie **INFERENCJĄ**.
 
 ## 6. Iniekcja: sprawić, żeby `\updater\mode` „istniał", nic nie zapisując
 
@@ -190,7 +192,34 @@ brak mechanizmu, nie tylko ryzyko.
   `CN4906`, czy eFuse blokuje *zapis* przez port, oraz jakikolwiek zewnętrzny zrzut
   NAND.
 
-## 10. Dlaczego to ważne dla tego repozytorium
+## 10. Po odzysku: jak aparat wygląda dalej (akt. 25-11-2026)
+
+Odzysk z 03-11 nie był końcem eksperymentów — od tego czasu ta sama kamera przeszła przez:
+
+| Data | Firmware | Co się stało |
+|---|---|---|
+| 03-11 | 3.26 (oficjalna treść) | odzysk z [§7](#7-przebieg-odzysku) |
+| 04-11 | 3.27 → 3.30 | pierwsza migawka elektroniczna (R54) |
+| 04-11 | 3.33–3.37 | inline zamiast cave'ów; 3.37 = oficjalna treść Sony jako referencja (R57) |
+| 08–11-11 | 3.43 → 3.76/3.77 | Darwin v3 + tablice EFCS w NVRAM; trzy tryby wypoziomowane (R84–R87) |
+| 23-11 | „3.91" | **oficjalna treść Sony 3.21** z podniesionym numerem — bez Silent, EFCS i CFW (na życzenie użytkownika; aktualizator przyjmuje tylko wyższe wersje) |
+| 24-11 | CFW 3.92 | Film: Picture Profile, Film Simulation, Extra fine, Silent, ISO do 204800 |
+
+Dwie obserwacje ważne dla tego dokumentu. Po pierwsze, **droga SWD okazała się
+wielokrotnego użytku**: przy instalacjach CFW zdarzały się NG Darwina (`0x1063` na 45 %)
+i co najmniej raz aparat został ponownie odratowany przez SWD-forced updater
+(build Film 3.95, 24-11). Po drugie, SWD na aparacie służy dziś też za **konsolę
+dyskrytyczną** — odczyt NVRAM, logi kernela przez AHB-AP (CAM-394), pomiar stanu patchy
+w RAM — a nie tylko do ratunku.
+
+Ich raporty po 03-11, jeśli chcesz iść dalej: [R54](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r54-paquete-330-envio-pkt0e.md),
+[R56](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r56-paquete-333-envio-inline.md),
+[R57](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r57-paquete-336-darwin-eq1.md),
+[R84](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r84-darwin-v3-en-camara.md),
+[R86](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r86-cfw-376-tres-modos-nivelados.md);
+aktualny stan aparatu prowadzą w swoim [docs/STATE.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/STATE.md).
+
+## 11. Dlaczego to ważne dla tego repozytorium
 
 - To jedyna udokumentowana droga powrotu z uszkodzonego `nflasha3`, a opiera się
   dokładnie na tym, co ustaliliśmy w [03-integralnosc.md](03-integralnosc.md):

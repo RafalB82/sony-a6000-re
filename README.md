@@ -34,7 +34,7 @@ A structured knowledge base about the ILCE-6000 platform:
 | 11 | [SWD and recovery](docs/en/11-swd-recovery.md) | The debug port, the one-register injection that boots the factory updater, how a bricked camera was recovered |
 | 12 | [Partition images (TPZL)](docs/en/12-partition-format.md) | The undocumented compression format, and the constraints that make a modified image boot |
 | 13 | [Darwin shutter patch](docs/en/13-darwin-shutter-patch.md) | Two bytes in the power/shutter MCU: what they disable, what stays alive |
-| 14 | [EFCS/Electronic selector](docs/en/14-efcs-selector.md) | The added shutter-mode function, its caves, and why the signal never reaches Darwin |
+| 14 | [EFCS/Electronic selector](docs/en/14-efcs-selector.md) | The added shutter-mode function, from the bricking to the working electronic shutter (3.30) and the NVRAM EFCS tables |
 | 15 | [Exposure and uniformity](docs/en/15-exposure-and-uniformity.md) | What the silent shutter really gives: 7 ms, 15.2 µs/row, 61 ms readout, and the RAM fix |
 | 16 | [Service manual](docs/en/16-service-manual.md) | Sheet map, debug balls and connectors, and how the shutter is actually wired |
 | — | [Sources](docs/en/99-sources.md) | References with a credibility grade per source |

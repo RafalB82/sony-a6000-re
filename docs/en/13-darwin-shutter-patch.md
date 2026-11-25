@@ -142,6 +142,25 @@ a real controller with its own state machine, not a power sequencer only. It als
 the concrete GPIO names (P40/P41 motor, P4D/P4E coils, P4B/P4C occupancy) that our
 [01](01-hardware.md) and [02](02-firmware-layout.md) documents do not carry.
 
+## 9. What came afterwards (updated 2026-11-25)
+
+The 2-byte patch turned out to be a foundation, not the end of Darwin's story:
+
+- **Per-shot gate (3.30+).** Once the real producer of `pkt[0x0e]` turned out to be the
+  BIONZ send constructor (R54), the same `0x4318` cave became a mode switch: it returns 0
+  only for an electronic-shot packet and runs the original route under EFCS. The static
+  suppression of 3.23 is the special case (`pkt[0x0e]` permanently 0).
+- **Darwin v3 (R82–R84).** The cave extended with a read of the EFCS compensation table
+  from **NVRAM** (`0x1850000+0x48`, 56 bytes); Darwin applies `c` per shutter speed.
+  Confirmed in camera: an NVRAM write changes Darwin's behavior (EFCS stops coming out
+  black). The change is an in-situ rewrite of `0x18d6e..0x18e0f` — addresses in the same
+  core as the patch in this document.
+- **The rest of Darwin stays untouched.** In v3 too, `nflasha15` remains Sony's; the
+  modification is limited to `darwin_core.bin` (plus its sum) — the "2 bytes, nothing
+  more" rule raised to "one file + a table".
+
+Details on the electronic shutter and calibration: [14](14-efcs-selector.md) §5/§5a.
+
 Reports: [E25](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-desactivacion-mecanica.md) (mechanism, 12 consumers, matrices),
 [E25-05](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-05-preparacion-paquetes-323-324.md) (packaging 3.23/3.24),
 [E24-05a](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e24-05a-captura-fin-bionz-darwin.md) (BIONZ↔Darwin protocol),
